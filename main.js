@@ -10,6 +10,31 @@ import DragAndDrop from 'ol/interaction/DragAndDrop';
 import Modify from 'ol/interaction/Modify';
 import Draw from 'ol/interaction/Draw';
 import Snap from 'ol/interaction/Snap';
+import {Fill, Stroke, Style} from 'ol/style';
+import {getArea} from 'ol/sphere';
+import colormap from 'colormap';
+
+// Look nice
+const min = 1e8; //         100.000.000
+const max = 2e13; // 20.000.000.000.000
+const steps = 50;
+const ramp = colormap({
+    colormap: "blackbody",
+    nshades: steps,
+});
+
+// Look nice: functions to determine a color
+// based on the area of a geometry
+function clamp(value, low, high)    {
+    return Math.max(low, Math.min(value, high))
+}
+
+function getColor(feature) {
+    const area = getArea(feature.getGeometry());
+    const f = Math.pow(clamp((area-min) / (max-min), 0, 1), 1/2);
+    const index = Math.round(f * (steps-1));
+    return ramp[index];
+}
 
 // Generierung der Instanz "Map", die eine Konstruktorfunktion besitzt und den Typ der 
 // Objektinstanz spezifiziert, Zuordnung der Karte der Konstante "map"
@@ -29,7 +54,17 @@ const source = new VectorSource();
 // Neuer Layer mit der leeren Vektor-Quelle
 // Layer der Karte map hinzufügen
 const layer = new VectorLayer({
-    source: source
+    source: source,
+    style: function(feature)    {
+        return new Style({
+            fill: new Fill({
+                color: getColor(feature),
+            }),
+            stroke: new Stroke({
+                color: 'rgba(255.255.255.0.8',
+            })
+        });
+    }
   });
 map.addLayer(layer);
 
