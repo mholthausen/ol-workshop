@@ -1,22 +1,24 @@
 // Import der benötigten Pakete und StyleSources aus "ol"
 import 'ol/ol.css';
+import GeoJSON from 'ol/format/GeoJSON'
 import Map from 'ol/Map';
+import VectorLayer from 'ol/layer/Vector'
+import VectorSource from 'ol/source/Vector'
 import View from 'ol/View';
-import TileLayer from 'ol/layer/Tile';
-import XYZSource from 'ol/source/XYZ';
-import {fromLonLat} from 'ol/proj';
+import sync from 'ol-hashed';
 
 // Generierung der Instanz "Map", die eine Konstruktorfunktion besitzt und den Typ der 
 // Objektinstanz spezifiziert, Zuordnung der Karte der Konstante "map"
-const map = new Map({
+let map = new Map({
     //target gibt das Ziel an, hier den map-container in index.html
     target: 'map-container',
     //layers konfiguriert die Karte mit einem in Kacheln (tiles) unterteilten TileLayer und
     //einer XYZSource
     layers: [
-        new TileLayer({
-            source: new XYZSource({
-                url: 'http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg'
+        new VectorLayer({
+            source: new VectorSource({
+                format: new GeoJSON(),
+                url: './data/countries.json',
             })
         })
     ],
@@ -27,9 +29,4 @@ const map = new Map({
     })
 });
 
-// Geolocation des Gerätes ermitteln und anzeigen lassen
-navigator.geolocation.getCurrentPosition(function(pos) {
-  const coords = fromLonLat([pos.coords.longitude, pos.coords.latitude]);
-  map.getView().animate({center: coords, zoom: 10});
-});
-
+sync(map);
