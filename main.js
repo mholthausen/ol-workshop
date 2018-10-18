@@ -6,7 +6,8 @@ import TileLayer from 'ol/layer/Tile';
 import XYZSource from 'ol/source/XYZ';
 import {fromLonLat} from 'ol/proj';
 
-// Generierung der Instanz "Map", die eine Konstruktorfunktion besitzt und den Typ der Objektinstanz spezifiziert, Zuordnung der Karte der Konstante "map"
+// Generierung der Instanz "Map", die eine Konstruktorfunktion besitzt und den Typ der 
+// Objektinstanz spezifiziert, Zuordnung der Karte der Konstante "map"
 const map = new Map({
     //target gibt das Ziel an, hier den map-container in index.html
     target: 'map-container',
