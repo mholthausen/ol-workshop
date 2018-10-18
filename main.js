@@ -7,6 +7,7 @@ import VectorSource from 'ol/source/Vector'
 import View from 'ol/View';
 import sync from 'ol-hashed';
 import DragAndDrop from 'ol/interaction/DragAndDrop';
+import Modify from 'ol/interaction/Modify';
 
 // Generierung der Instanz "Map", die eine Konstruktorfunktion besitzt und den Typ der 
 // Objektinstanz spezifiziert, Zuordnung der Karte der Konstante "map"
@@ -32,3 +33,7 @@ map.addLayer(layer);
 
 // Drag & Drop Interaktion
 map.addInteraction(new DragAndDrop({ source: source, formatConstructors: [GeoJSON] })); 
+
+map.addInteraction(new Modify({
+    source: source,
+}))
