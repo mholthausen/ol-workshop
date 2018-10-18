@@ -54,3 +54,18 @@ map.addInteraction(new Draw({
 map.addInteraction(new Snap({
     source: source,
 }))
+
+// Clear Interaction
+const clear = document.getElementById('clear');
+clear.addEventListener('click', function() {
+    source.clear();
+})
+
+// Download Data (GeoJSON)
+const format = new GeoJSON({featureProjection: 'EPSG:3857'});
+const download = document.getElementById('download');
+source.on('change', function() {
+    const features = source.getFeatures();
+    const json = format.writeFeatures(features);
+    download.href = 'data:text/json;charset=utf-8,' + json;
+});
