@@ -8,6 +8,7 @@ import View from 'ol/View';
 import sync from 'ol-hashed';
 import DragAndDrop from 'ol/interaction/DragAndDrop';
 import Modify from 'ol/interaction/Modify';
+import Draw from 'ol/interaction/Draw';
 
 // Generierung der Instanz "Map", die eine Konstruktorfunktion besitzt und den Typ der 
 // Objektinstanz spezifiziert, Zuordnung der Karte der Konstante "map"
@@ -35,5 +36,10 @@ map.addLayer(layer);
 map.addInteraction(new DragAndDrop({ source: source, formatConstructors: [GeoJSON] })); 
 
 map.addInteraction(new Modify({
+    source: source,
+}))
+
+map.addInteraction(new Draw({
+    type: "Polygon",
     source: source,
 }))
