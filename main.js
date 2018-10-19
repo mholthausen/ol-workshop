@@ -5,6 +5,9 @@ import MVT from 'ol/format/MVT';
 import VectorTileLayer from 'ol/layer/VectorTile'; 
 import VectorTileSource from 'ol/source/VectorTile'; 
 import Overlay from 'ol/Overlay';
+import {Style, Fill, Stroke, Circle, Text} from 'ol/style'; 
+import { withinExtentAndZ } from 'ol/tilecoord';
+// import {createDefaultStyle} from 'ol/style/Style'; 
 
 // See https://openmaptiles.com/hosting/ for terms and access key
 // Account wird benötigt!
@@ -71,6 +74,87 @@ map.on('click', function(e) {
     } else {
         overlay.setPosition();
     }
+});
+
+// Layer Syles für einzelne Features festlegen
+layer.setStyle(function(feature, resolution) {
+    const properties = feature.getProperties();
+
+    // Wasserpolygone
+    if(properties.layer == 'water') {
+        return new Style({
+            fill: new Fill({
+                color: 'rgba(0, 0, 255, 0.7)'
+            })
+        });
+    }
+
+    // Grenzlinien
+    if(properties.layer === 'boundary' && properties.admin_level === 2) {
+        return new Style({
+            stroke: new Stroke({
+                color: 'gray',
+            })
+        });
+    }
+
+    // Labels für Kontinente angeben
+    if(properties.layer === 'place' && properties.class === 'continent' ){
+        return new Style({
+            text: new Text({
+                text: properties.name,
+                font: 'bold 16px Open Sans',
+                fill: new Fill({
+                    color: 'black',
+                }),
+                stroke: new Stroke({
+                    color: 'white',
+                })
+            })
+        });
+    }
+    
+    //Labels für Länder anzeigen
+    if(properties.layer === 'place' && properties.class === 'country' && resolution < map.getView().getResolutionForZoom(5)) {
+        return new Style({
+            text: new Text({
+                text: properties.name,
+            }),
+        })
+    }
+
+    if(properties.layer === 'place' && properties.capital) {
+        console.log('C');
+        const point = new Style({
+            image: new Circle({
+                radius: 5,
+                fill: new Fill({
+                    color: 'black',
+                }),
+                stroke: new Stroke({
+                    color: 'gray',
+                })
+            })
+        });
+
+        // Punkt nur bei einer bestimmten Zoomstufe anzeigen lassen
+        if(resolution < map.getView().getResolutionForZoom(6))  {
+            point.setText(new Text({
+                text: properties.name,
+                font: 'italic 12px Open Sans',
+                offsetY: -12,
+                fill: new Fill({
+                    color: '#013',
+                }),
+                stroke: new Stroke({
+                    color: 'white',
+                })
+            }));
+        }
+        return point;
+    }
+
+    // return createDefaultStyle(feature, resolution);
 });
 
 map.addLayer(layer); 
