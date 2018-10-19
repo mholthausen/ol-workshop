@@ -36,5 +36,3 @@ const layer = new VectorTileLayer({
 
 
 map.addLayer(layer); 
-
-console.log(layer.source.url);
