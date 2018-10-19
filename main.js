@@ -15,6 +15,7 @@ function flood(pixels, data)    {
     const pixel = pixels[0];
     if(pixel[3])    {
         // R, G, B values as elevation
+        //console.log(`0: ${pixel[0]}, 1: ${pixel[1]}, 2: ${pixel[2]}, 3: ${pixel[3]}`)
         const height = -10000 + ((pixel[0] * 256 * 256 + pixel[1] * 256 + pixel[2]) * 0.1);
         if(height <= data.level)    {
             // sea blue
